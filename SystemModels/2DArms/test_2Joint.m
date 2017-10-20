@@ -2,8 +2,8 @@
 
 matlab_path = pwd;
 matlab_path = matlab_path(1:strfind(pwd, 'MATLAB')+5);
-addpath([matlab_path,'\Useful Code\GroupTheory'])
-addpath([matlab_path,'\Useful Code\SFDyn'])
+addpath([matlab_path,'\Handy-Tools.git\GroupTheory'])
+addpath([matlab_path,'\Handy-Tools.git\SFDyn'])
 
 % Joint angles
 q = sym('th', [2,1]);
@@ -12,13 +12,13 @@ l1 = .1;
 l2 = .1;
 
 % Set up coordinates
-g1 = SE2([0,0,q(1)])*SE2([l1, 0, 0]);
-g1.g = simplify(g1.g);
-g2 = g1*SE2([0, 0, q(2)])*SE2([l2, 0, 0]);
-g2.g = simplify(g2.g);
+q1 = SE2([0,0,q(1)])*SE2([l1, 0, 0]);
+q1.g = simplify(q1.g);
+q2 = q1*SE2([0, 0, q(2)])*SE2([l2, 0, 0]);
+q2.g = simplify(q2.g);
 
 % Get Jacobian of end point, xy, also the precision of those variables
-J = [diff(g2.xy, q(1)), diff(g2.xy, q(2))];
+J = [diff(q2.xy, q(1)), diff(q2.xy, q(2))];
 fun_J = matlabFunction(J);
 % Sensitivity
 S = [J(1,1).^2 + J(1,2).^2; J(2,1).^2 + J(2,2).^2];
@@ -90,7 +90,7 @@ clf
 surf(T1,T2,s_dx + s_dy + mask)
 xlabel('th1')
 ylabel('th2')
-title('Combined Sensitivity')
+title('Combined Sensitivity (Probably correct cuz you add variances)')
 
 % figure(300)
 % clf
