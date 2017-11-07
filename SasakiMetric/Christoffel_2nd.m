@@ -1,12 +1,16 @@
 function G2 = Christoffel_2nd(metric, coordinates)
-%CHRISTOFFEL_1ST Summary of this function goes here
+%CHRISTOFFEL_2ND Calculates Christoffel symbols of the second kind.
 %   Detailed explanation goes here
 G = Christoffel_1st(metric, coordinates);
 g_inv = inv(metric);
-K = size(g_inv, 2);
+n = size(g_inv, 2);
 
 G2 = zeros(size(G));
-for k = 1:K
-    G2(:,:,:) = G2 + g_inv(:,k)
+for m = 1:n
+    for i=1:n
+        for j=1:n
+            G2(m,i,j) = g_inv(m,:)*reshape(G(:,i,j), [n,1])
+        end
+    end
 end
 end
