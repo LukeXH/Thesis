@@ -4,7 +4,7 @@ function G = Christoffel_1st(metric, coordinates)
 K = size(coordinates,1);
 I = size(metric,1);
 J = size(metric,2);
-G = zeros(K,I,J);
+G = sym('x')*zeros(K,I,J);
 
 for k = 1:K
     for i = 1:I
