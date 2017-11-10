@@ -1,4 +1,4 @@
-function G = Christoffel_1st(metric, coordinates)
+function G = christoffel1st(metric, coordinates)
 %CHRISTOFFEL_1ST Summary of this function goes here
 %   Detailed explanation goes here
 K = size(coordinates,1);

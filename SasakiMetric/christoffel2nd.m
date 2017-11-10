@@ -1,7 +1,7 @@
-function G2 = Christoffel_2nd(metric, coordinates)
+function G2 = christoffel2nd(metric, coordinates)
 %CHRISTOFFEL_2ND Calculates Christoffel symbols of the second kind.
 %   Detailed explanation goes here
-G = Christoffel_1st(metric, coordinates);
+G = christoffel1st(metric, coordinates);
 g_inv = inv(metric);
 n = size(g_inv, 2);
 

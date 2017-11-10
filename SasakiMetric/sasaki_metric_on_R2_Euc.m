@@ -6,14 +6,15 @@ clear
 n = 2;
 x = sym('x', [n,1]);
 v = sym('v', [n,1]);
+a = sym('a', [n,1]);
 
 M = x; % Manifold parameter "vector"
 g = diag([1,x(1).^2]);%eye(n);% Metric on M
 TM = [x;v]; % TM parameter "vector"
 
 % Now to calculate the Sasaki metric
-gam1 = Christoffel_1st(g,x);
-gam2 = Christoffel_2nd(g,x);
+gam1 = christoffel1st(g,x);
+gam2 = christoffel2nd(g,x);
 % For the sake of argument
 
 
@@ -31,9 +32,7 @@ g_bar = [g, zeros(size(g)); zeros(size(g)), g] + [A, B; B.', zeros(size(g))];
 disp('The Sasaki Metric')
 disp(g_bar)
 
-
 %%% Plot metric ellipses
 figure(11100)
 clf
 [xs,ys] = meshgrid(linspace(-1,1,5), linspace(-1,1,5));
-
