@@ -80,3 +80,24 @@ axis equal
 axis square
 
 %%% In this section, we make some mountains
+j = 10;
+[xs, vs] = meshgrid(linspace(-2,2,j), linspace(-2,2,j));
+h = @(x,v) -x.*v;
+
+figure(30001)
+clf
+subplot(1,3,1)
+surf(xs,vs, h(xs,vs))
+xlabel('x')
+ylabel('v')
+zlabel('h')
+subplot(1,3,2)
+surf(xs,vs, xs.^2 + vs.^2 + h(xs,vs))
+title('Zero to all points')
+xlabel('x')
+ylabel('v')
+subplot(1,3,3)
+surf(xs,vs, xs.^2 + vs.^2 - h(xs,vs))
+title('All points to Zero')
+xlabel('x')
+ylabel('v')
