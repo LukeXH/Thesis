@@ -4,9 +4,9 @@ clear
 % in the state space.
 
 % Parameters
-q_start = [1;1];
-q1 = [0;0];
-q2 = [2;0];
+q_start = [0;1];
+q1 = [-1;0];
+q2 = [1;0];
 q_goal = q1;
 
 % Relaxing function, only moves velocities up and down
