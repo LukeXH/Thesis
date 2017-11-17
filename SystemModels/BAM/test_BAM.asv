@@ -1,0 +1,25 @@
+% This is an attempt to recreate the dynamics of the Tethered ball from the
+% end of the bam.
+
+matlab_path = pwd;
+matlab_path = matlab_path(1:strfind(pwd, 'MATLAB')+5);
+addpath([matlab_path,'\Handy-Tools.git\GroupTheory'])
+addpath([matlab_path,'\Handy-Tools.git\SFDyn'])
+addpath([matlab_path,'\Thesis.git\SystemModels\Trajectories'])
+
+% q = 180 is in direction of gravity, q increments clocwise.
+% Global coordinates of ball, from pivot of throwing arm
+x = sym('x', [2,1]);
+y = sym('y', [2,1]);
+
+%Arm coordinates, angle and angular velocity
+q = sym('q',[2,1]);
+syms I g m r b
+
+% Equations of motion for the arm.
+dq = [q(2);...
+      r*g/I*sin(q(1)) - b/I*q(2)];
+% Transform from arm state space coordiantes to global positional
+% coordiantes
+xy_arm = [r*sin(q(1)), r*cos(q(1));...
+          ];
