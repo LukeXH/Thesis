@@ -43,17 +43,19 @@ ode_fcn = @(t, x) [x(3:4); accel_fcn(x(1:2), x(3:4), [0; 0])];
 
 %%% Simple loop to grow an RRT like tree
 dt = .01;
-n = 14;
-ll = cell(2^n, 2); % linked list
+n = 12;
+ll = cell(2^n, 3); % linked list, {parent id, data, path length}
 % Initial state
 ll{1,1} = 0;
 ll{1,2} = [0,0,0,0]'; % x,y,dx,dy
+ll{1,3} = 0;
 j_stop = 1;
 for i = 1:n
     for j = 1:j_stop
         ll{j_stop+j,1} = j;
         q = ll{j,2};
-        ll{j_stop+j,2} = q + dt*[q(3:4); accel_fcn(q(1:2), q(3:4), 5*(rand(2,1)-.5))];
+        ll{j_stop+j,2} = q + dt*[q(3:4); accel_fcn(q(1:2), q(3:4), 50*2*(rand(2,1)-.5))];
+        ll{j_stop+j,3} = 1+ll{j,3};
     end
     j_stop = j_stop + 2^(i-1);
 end
@@ -72,7 +74,12 @@ for l = fliplr(2^(n-1)+1:2^n)
        parent = ll{parent,1};
     end
     qs = plot_lines{k};
-    plot(qs(1,:), qs(2,:),'r')
+    s  = (1:size(qs(1,:),2))-1;
+    plot3(qs(1,:), qs(2,:), s,'r')
     hold on
     k = k+1;
 end
+xlabel('p1')
+ylabel('p2')
+zlabel('epoch')
+title('Random Tree of 2-Pendulum Motion')
