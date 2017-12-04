@@ -55,7 +55,10 @@ for i = 1:n
         ll{j_stop+j,1} = j;
         q = ll{j,2};
         ll{j_stop+j,2} = q + dt*[q(3:4); accel_fcn(q(1:2), q(3:4), 50*2*(rand(2,1)-.5))];
+<<<<<<< Updated upstream
         ll{j_stop+j,3} = 1+ll{j,3};
+=======
+>>>>>>> Stashed changes
     end
     j_stop = j_stop + 2^(i-1);
 end
