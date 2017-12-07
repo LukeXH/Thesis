@@ -32,6 +32,17 @@ classdef FEM_2cube < handle
                    (this.f(:,end)-this.f(:,end-1))./b(:,end)];
         end % dfdx
         
+        function res = dfdy(this)
+            %METHOD1 Summary of this method goes here
+            %   Gives you the first order difference along the x domain
+            n = this.x_size;
+            a = this.Y(2:n-1,:) - this.Y(1:n-2,:);
+            b = this.Y(3:n,:) - this.Y(2:n-1,:);
+            res = [(this.f(2,:)-this.f(1,:))./a(1,:),...
+                   (b.*this.f(3:n,:) + (a-b).*this.f(2:n-1,:) - a.*this.f(1:n-2,:)) ./ (2.*a.*b),...
+                   (this.f(end,:)-this.f(end-1,:))./b(end,:)];
+        end % dfdx
+        
         function this = set_f(this, f)
             % This function the function f to a matrix value
             if any(size(this.f) ~= size(f))
