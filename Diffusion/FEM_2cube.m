@@ -18,7 +18,7 @@ classdef FEM_2cube < handle
             this.y_size = length(y_domain);
             [this.X, this.Y] = meshgrid(x_domain, y_domain);
             % initialize the function being approximated to zero
-            this.f = zeros(this.x_size, this.y_size);
+            this.f = zeros(this.y_size, this.x_size);
         end
         
         function res = dfdx(this)
@@ -35,24 +35,25 @@ classdef FEM_2cube < handle
         function res = dfdy(this)
             %METHOD1 Summary of this method goes here
             %   Gives you the first order difference along the x domain
-            n = this.x_size;
+            n = this.y_size;
             a = this.Y(2:n-1,:) - this.Y(1:n-2,:);
             b = this.Y(3:n,:) - this.Y(2:n-1,:);
-            res = [(this.f(2,:)-this.f(1,:))./a(1,:),...
-                   (b.*this.f(3:n,:) + (a-b).*this.f(2:n-1,:) - a.*this.f(1:n-2,:)) ./ (2.*a.*b),...
+            res = [(this.f(2,:)-this.f(1,:))./a(1,:);...
+                   (b.*this.f(3:n,:) + (a-b).*this.f(2:n-1,:) - a.*this.f(1:n-2,:)) ./ (2.*a.*b);...
                    (this.f(end,:)-this.f(end-1,:))./b(end,:)];
         end % dfdx
         
         function res = getIntegral(this)
             % Simple central value integral
-            dx = this.X(:,2:this.x_size) - this.X(:,1:this.x_size-1);
-            dy = this.Y(2:this.y_size,:) - this.Y(1:this.y_size-1,:);
+            dx = this.X(1,2:this.x_size) - this.X(1,1:this.x_size-1);
+            dy = this.Y(2:this.y_size,1) - this.Y(1:this.y_size-1,1);
             
-            res = (this.f(1:this.y_size-1, 1:this.x_size-1) + ...
+            I =   (this.f(1:this.y_size-1, 1:this.x_size-1) + ...
                    this.f(1:this.y_size-1, 2:this.x_size) + ...
                    this.f(2:this.y_size,   2:this.x_size) + ...
                    this.f(2:this.y_size,   1:this.x_size-1)...
-                    )/4 .* dx.*dy;
+                    )/4 .* (dy.*dy);
+            res = sum(sum(I));    
         end % getIntegral
         
         function this = set_f(this, f)

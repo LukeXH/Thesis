@@ -74,3 +74,22 @@ clf
 surf(U1,V1,Z1_interp)
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Testing the FEM_2cube class.  ...Finally.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+p = FEM_2cube(linspace(0,1,21), linspace(1,2,21));
+p.f(11,11) = 1;
+p.set_f(p.f/p.getIntegral())
+
+figure(23301)
+clf
+surf(p.X,p.Y,p.f)
+for k = 1:100
+    dp = -(p.dfdx + p.dfdy);
+    p.set_f(p.f + dp*0.1);
+    p.set_f(p.f/p.getIntegral());
+    contour(p.X,p.Y,p.f)
+    drawnow
+    pause(0.1)
+end
+
