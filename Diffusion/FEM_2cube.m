@@ -43,6 +43,18 @@ classdef FEM_2cube < handle
                    (this.f(end,:)-this.f(end-1,:))./b(end,:)];
         end % dfdx
         
+        function res = getIntegral(this)
+            % Simple central value integral
+            dx = this.X(:,2:this.x_size) - this.X(:,1:this.x_size-1);
+            dy = this.Y(2:this.y_size,:) - this.Y(1:this.y_size-1,:);
+            
+            res = (this.f(1:this.y_size-1, 1:this.x_size-1) + ...
+                   this.f(1:this.y_size-1, 2:this.x_size) + ...
+                   this.f(2:this.y_size,   2:this.x_size) + ...
+                   this.f(2:this.y_size,   1:this.x_size-1)...
+                    )/4 .* dx.*dy;
+        end % getIntegral
+        
         function this = set_f(this, f)
             % This function the function f to a matrix value
             if any(size(this.f) ~= size(f))
