@@ -25,8 +25,8 @@ classdef FEM_2cube < handle
             %METHOD1 Summary of this method goes here
             %   Gives you the first order difference along the x domain
             n = this.x_size;
-            a = this.X(:,2:n-1) - this.X(:,1:n-2);
-            b = this.X(:,3:n) - this.X(:,2:n-1);
+            a = this.X(:,3:n) - this.X(:,2:n-1);
+            b = this.X(:,2:n-1) - this.X(:,1:n-2);
             res = [(this.f(:,2)-this.f(:,1))./a(:,1),...
                    (b.*this.f(:,3:n) + (a-b).*this.f(:,2:n-1) - a.*this.f(:,1:n-2)) ./ (2.*a.*b),...
                    (this.f(:,end)-this.f(:,end-1))./b(:,end)];
@@ -36,12 +36,46 @@ classdef FEM_2cube < handle
             %METHOD1 Summary of this method goes here
             %   Gives you the first order difference along the x domain
             n = this.y_size;
-            a = this.Y(2:n-1,:) - this.Y(1:n-2,:);
-            b = this.Y(3:n,:) - this.Y(2:n-1,:);
+            a = this.Y(3:n,:) - this.Y(2:n-1,:);
+            b = this.Y(2:n-1,:) - this.Y(1:n-2,:);
             res = [(this.f(2,:)-this.f(1,:))./a(1,:);...
                    (b.*this.f(3:n,:) + (a-b).*this.f(2:n-1,:) - a.*this.f(1:n-2,:)) ./ (2.*a.*b);...
                    (this.f(end,:)-this.f(end-1,:))./b(end,:)];
-        end % dfdx
+        end % dfdy
+        
+        function res = d2fdx2(this)
+            %METHOD1 Summary of this method goes here
+            %   Gives you the second order difference along the x domain
+            %   assuming zero at boundaries
+            n = this.x_size;
+            a = this.X(:,3:n) - this.X(:,2:n-1);
+            b = this.X(:,2:n-1) - this.X(:,1:n-2);
+            res = [zeros(this.y_size,1),...
+                   2*(b.*this.f(:,3:n) - (a+b).*this.f(:,2:n-1) + a.*this.f(:,1:n-2)) ./ (a.*b.*(a+b)),...
+                   zeros(this.y_size,1)];
+        end % d2fdx2
+        
+        function res = d2fdy2(this)
+            %METHOD1 Summary of this method goes here
+            %   Gives you the first order difference along the x domain
+            n = this.y_size;
+            a = this.Y(3:n,:) - this.Y(2:n-1,:);
+            b = this.Y(2:n-1,:) - this.Y(1:n-2,:);
+            res = [zeros(1,this.x_size);...
+                   2*(b.*this.f(3:n,:) - (a+b).*this.f(2:n-1,:) + a.*this.f(1:n-2,:)) ./ (a.*b.*(a+b));...
+                   zeros(1,this.x_size)];
+        end % d2fdy2
+        
+        function res = d2fdxdy(this)
+            %METHOD1 Summary of this method goes here
+            %   Gives you the first order difference along the x domain
+            n = this.y_size;
+            a = this.Y(3:n,:) - this.Y(2:n-1,:);
+            b = this.Y(2:n-1,:) - this.Y(1:n-2,:);
+            res = [(this.f(2,:)-this.f(1,:))./a(1,:);...
+                   (b.*this.f(3:n,:) + (a-b).*this.f(2:n-1,:) - a.*this.f(1:n-2,:)) ./ (2.*a.*b);...
+                   (this.f(end,:)-this.f(end-1,:))./b(end,:)];
+        end % d2fdxdy
         
         function res = getIntegral(this)
             % Simple central value integral
@@ -52,7 +86,7 @@ classdef FEM_2cube < handle
                    this.f(1:this.y_size-1, 2:this.x_size) + ...
                    this.f(2:this.y_size,   2:this.x_size) + ...
                    this.f(2:this.y_size,   1:this.x_size-1)...
-                    )/4 .* (dy.*dy);
+                    )/4 .* (dy*dx);
             res = sum(sum(I));    
         end % getIntegral
         
