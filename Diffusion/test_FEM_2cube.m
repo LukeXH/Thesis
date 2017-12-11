@@ -85,11 +85,16 @@ figure(23301)
 clf
 surf(p.X,p.Y,p.f)
 for k = 1:100
-    dp = -(p.dfdx + p.dfdy);
-    p.set_f(p.f + dp*0.1);
+%     dp = -(p.dfdx + p.dfdy) + p.d2fdx2 + p.d2fdy2 + p.d2fdxdy;
+%     dp = -p.dfdy + .01*(-p.d2fdxdy + p.d2fdx2 + p.d2fdy2);
+    dp = -p.dfdy + .01*(p.d2fdx2 + p.d2fdy2);
+    p.set_f(p.f + dp*0.01);
+    p.f(p.f < 0) = 0;
     p.set_f(p.f/p.getIntegral());
-    contour(p.X,p.Y,p.f)
+    surf(p.X,p.Y,p.f)
     drawnow
     pause(0.1)
 end
+xlabel('x')
+ylabel('y')
 
