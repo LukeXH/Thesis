@@ -1,22 +1,25 @@
-classdef FEM_2cube < handle
+classdef FEM_3cube < handle
     %FEM_2CUBE Finite Element Method basis function class
     %   Ideally, this class allows for the generation of a 
     
     properties %(Access = protected)
         X % Matrix of X values
         Y % Matrix of Y values
+        Z % Matrix of Z values
         f % Approximated function
         x_size 
         y_size
+        z_size
     end
     
     methods
-        function this = FEM_2cube(x_domain, y_domain)
+        function this = FEM_3cube(x_domain, y_domain, z_domain)
             %FEM_2CUBE Construct an instance of this class
             %   Kinda like meshgrid
             this.x_size = length(x_domain);
             this.y_size = length(y_domain);
-            [this.X, this.Y] = meshgrid(x_domain, y_domain);
+            this.z_size = length(z_domain);
+            [this.X, this.Y, this.Z] = meshgrid(x_domain, y_domain);
             % initialize the function being approximated to zero
             this.f = zeros(this.y_size, this.x_size);
         end
