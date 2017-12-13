@@ -55,10 +55,7 @@ for i = 1:n
         ll{j_stop+j,1} = j;
         q = ll{j,2};
         ll{j_stop+j,2} = q + dt*[q(3:4); accel_fcn(q(1:2), q(3:4), 50*2*(rand(2,1)-.5))];
-<<<<<<< Updated upstream
         ll{j_stop+j,3} = 1+ll{j,3};
-=======
->>>>>>> Stashed changes
     end
     j_stop = j_stop + 2^(i-1);
 end
@@ -86,3 +83,36 @@ xlabel('p1')
 ylabel('p2')
 zlabel('epoch')
 title('Random Tree of 2-Pendulum Motion')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Now let's try a particle swarm
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+multi_ode_fcn = @(t, x, u) [x(21:40);...
+                            accel_fcn(x(1:2), x(21:22), u(1:2));...
+                            accel_fcn(x(3:4), x(23:24), u(3:4));...
+                            accel_fcn(x(5:6), x(25:26), u(5:6));...
+                            accel_fcn(x(7:8), x(27:28), u(7:8));...
+                            accel_fcn(x(9:10), x(29:30), u(9:10));...
+                            accel_fcn(x(11:12), x(31:32), u(11:12));...
+                            accel_fcn(x(13:14), x(33:34), u(13:14));...
+                            accel_fcn(x(15:16), x(35:36), u(15:16));...
+                            accel_fcn(x(17:18), x(37:38), u(17:18));...
+                            accel_fcn(x(19:20), x(39:40), u(19:20))];
+xs = [];
+ys = [];
+ts = [];
+dt = .01;
+x_last = zeros(40,1);
+for i=1:1000
+    rng = rand(20,1)-.5;
+    tmp_sol = ode45(@(t,X) multi_ode_fcn(t,X,rng), [0, dt], x_last);
+    x_last = tmp_sol.y(:,end);
+    xs = [xs, tmp_sol.y(1:2:19,[1,end])];
+    ys = [ys, tmp_sol.y(2:2:20,[1,end])];
+end
+figure(15201)
+clf
+for i = 1:10
+    plot(xs(i,:), ys(i,:))
+    hold on
+end
